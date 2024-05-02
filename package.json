@@ -9,5 +9,8 @@
     "axios": "^1.6.8",
     "cheerio": "^1.0.0-rc.12",
     "node-schedule": "^2.1.1"
+  },
+  "engines": {
+    "npm": "10.7.0"
   }
 }
