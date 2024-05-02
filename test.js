@@ -63,6 +63,7 @@ async function sendClassesToEndpoint(classes) {
   }
 }
 
-
+// Schedule the task to run at 5:10 PM UTC every day
+schedule.scheduleJob("0 70 * * *", function () {
   scrapeAndSendClasses();
-
+});
