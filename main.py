@@ -76,7 +76,7 @@ def get_karachi_now():
     return datetime.now(karachi_tz)
 
 # Schedule the task to run at 11:51 AM Karachi time every day
-schedule.every().day.at("17:13").do(scrape_and_send_classes)
+schedule.every().day.at("17:18").do(scrape_and_send_classes)
 
 print("Running...")
 
