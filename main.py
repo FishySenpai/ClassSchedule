@@ -2,7 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 import schedule
 import time
-from datetime import datetime, timezone, timedelta
+from datetime import datetime
+import pytz
 
 # Function to scrape class information and send it to the specified endpoint
 def scrape_and_send_classes():
@@ -38,7 +39,6 @@ def scrape_and_send_classes():
                 class_info = [cell.text.strip() for cell in cells]
                 classes.append(class_info)
 
-        
         # If no classes are found, print a message
         if not classes:
             print("No classes found.")
@@ -57,7 +57,7 @@ def send_classes_to_endpoint(classes):
         payload = {"text": str(classes)}
         headers = {
             "content-type": "application/json",
-            "X-RapidAPI-Key": "325a7f72damshf16ffcb2c3ed7bep1f566djsn006db2e1a65a",
+            "X-RapidAPI-Key": "YOUR_RAPIDAPI_KEY",
             "X-RapidAPI-Host": "whin2.p.rapidapi.com"
         }
 
@@ -68,33 +68,19 @@ def send_classes_to_endpoint(classes):
     except Exception as e:
         print("Error occurred while sending classes to endpoint:", e)
 
+# Set the local time zone to Karachi
+karachi_tz = pytz.timezone('Asia/Karachi')
 
-# Get the current UTC time
-def get_utc_now():
-    return datetime.now(timezone.utc)
+# Function to get the current time in Karachi time zone
+def get_karachi_now():
+    return datetime.now(karachi_tz)
 
-# # Calculate the time difference between the current time and the desired time (7:15 PM UTC)
-# def calculate_time_difference():
-#     now = get_utc_now()
-#     print("time rn", now)
-#     desired_time = now.replace(hour=12, minute=13, second=0, microsecond=0)
-#     time_difference = (desired_time - now).total_seconds()
-#     return time_difference
+# Schedule the task to run at 11:51 AM Karachi time every day
+schedule.every().day.at("17:13").do(scrape_and_send_classes)
 
-# Schedule the task to run at 7:14 PM UTC every day (for testing)
-# Schedule the task to run at 7:15 PM UTC every day
-schedule.every().day.at("11:51").do(scrape_and_send_classes)
+print("Running...")
 
-# # Calculate initial time difference
-# initial_time_difference = calculate_time_difference()
-# # Wait for the initial time difference before starting the loop
-# print("Initial time difference:", initial_time_difference)
-# time.sleep(initial_time_difference)
-now = get_utc_now()
-print("time rn", now)
-print("running...")
 # Keep the script running
-schedule.run_all()
 while True:
     schedule.run_pending()
     time.sleep(1)
