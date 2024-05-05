@@ -3,7 +3,8 @@ from bs4 import BeautifulSoup
 import schedule
 import time
 from datetime import datetime, timezone, timedelta
-
+import pytz
+tz = pytz.timezone('UTC')
 # Function to scrape class information and send it to the specified endpoint
 def scrape_and_send_classes():
     print("Scraping and sending classes...")
@@ -38,8 +39,13 @@ def scrape_and_send_classes():
                 class_info = [cell.text.strip() for cell in cells]
                 classes.append(class_info)
 
-        # Send the class information to the specified endpoint
-        send_classes_to_endpoint(classes)
+        
+        # If no classes are found, print a message
+        if not classes:
+            print("No classes found.")
+        else:
+            # Send the class information to the specified endpoint
+            send_classes_to_endpoint(classes)
     except Exception as e:
         print("Error occurred while scraping and sending classes:", e)
 
@@ -63,28 +69,33 @@ def send_classes_to_endpoint(classes):
     except Exception as e:
         print("Error occurred while sending classes to endpoint:", e)
 
+
 # Get the current UTC time
 def get_utc_now():
     return datetime.now(timezone.utc)
 
-# Calculate the time difference between the current time and the desired time (7:15 PM UTC)
-def calculate_time_difference():
-    now = get_utc_now()
-    desired_time = now.replace(hour=19, minute=15, second=0, microsecond=0)
-    time_difference = (desired_time - now).total_seconds()
-    return time_difference
+# # Calculate the time difference between the current time and the desired time (7:15 PM UTC)
+# def calculate_time_difference():
+#     now = get_utc_now()
+#     print("time rn", now)
+#     desired_time = now.replace(hour=12, minute=13, second=0, microsecond=0)
+#     time_difference = (desired_time - now).total_seconds()
+#     return time_difference
 
 # Schedule the task to run at 7:14 PM UTC every day (for testing)
-schedule.every().day.at("19:23").do(scrape_and_send_classes)
+# Schedule the task to run at 7:15 PM UTC every day
+schedule.every().day.at("11:51").do(scrape_and_send_classes)
 
-# Calculate initial time difference
-initial_time_difference = calculate_time_difference()
-# Wait for the initial time difference before starting the loop
-time.sleep(initial_time_difference)
-print("Initial time difference:", initial_time_difference)
-
+# # Calculate initial time difference
+# initial_time_difference = calculate_time_difference()
+# # Wait for the initial time difference before starting the loop
+# print("Initial time difference:", initial_time_difference)
+# time.sleep(initial_time_difference)
+now = get_utc_now()
+print("time rn", now)
+print("running...")
 # Keep the script running
+schedule.run_all()
 while True:
-    print("Checking schedule...")
     schedule.run_pending()
     time.sleep(1)
