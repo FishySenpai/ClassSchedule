@@ -52,12 +52,24 @@ def scrape_and_send_classes():
 def send_classes_to_endpoint(classes):
     print("Sending classes to endpoint...")
     try:
+        formatted_classes = ""
+        for idx, class_info in enumerate(classes, start=1):
+            course_name = class_info[3]
+            instructor = class_info[4]
+            room = class_info[5]
+            time_schedule = class_info[6]
+
+            formatted_class = f"{idx}. Course: {course_name}\n" \
+                              f"   Instructor: {instructor}\n" \
+                               f"   Room: {room}\n" \
+                              f"   Time: {time_schedule}\n\n"
+            formatted_classes += formatted_class
         url = "https://whin2.p.rapidapi.com/send"
 
-        payload = {"text": str(classes)}
+        payload = {"text": str(formatted_classes)}
         headers = {
             "content-type": "application/json",
-            "X-RapidAPI-Key": "YOUR_RAPIDAPI_KEY",
+            "X-RapidAPI-Key": "ab5260649dmsh1c14116f3d59e38p17de0djsn0e0cd39cc3ff",
             "X-RapidAPI-Host": "whin2.p.rapidapi.com"
         }
 
@@ -68,19 +80,9 @@ def send_classes_to_endpoint(classes):
     except Exception as e:
         print("Error occurred while sending classes to endpoint:", e)
 
-# Set the local time zone to Karachi
-karachi_tz = pytz.timezone('Asia/Karachi')
-
-# Function to get the current time in Karachi time zone
-def get_karachi_now():
-    return datetime.now(karachi_tz)
-
-# Schedule the task to run at 11:51 AM Karachi time every day
-schedule.every().day.at("17:18").do(scrape_and_send_classes)
-
 print("Running...")
 
-# Keep the script running
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+# Schedule the task to run at 11:51 AM Karachi time every day
+scrape_and_send_classes()
+
+
