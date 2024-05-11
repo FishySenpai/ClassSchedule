@@ -5,6 +5,8 @@ on:
     - cron: '*/3 * * * *' 
 
 jobs:
+  permissions:
+    contents: write
   build:
     runs-on: ubuntu-latest
     steps:
