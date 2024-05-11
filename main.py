@@ -1,9 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
-import schedule
-import time
 from datetime import datetime
-import pytz
+
 
 # Function to scrape class information and send it to the specified endpoint
 def scrape_and_send_classes():
