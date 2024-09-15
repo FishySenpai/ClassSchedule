@@ -25,16 +25,23 @@ def scrape_and_send_classes():
         # Initialize a list to store class information
         classes = []
 
-        # Loop through each row and extract data for BSCS 5B
+        # Loop through each row and extract data for BSCS 6 B
         for row in rows:
             # Find all cells in the row
             cells = row.find_all("td")
 
-            # Check if the row contains data for BSCS 5B in the class/section column
-            if len(cells) >= 3 and "5 B" in cells[2].text.strip():
-                # Extract class information
-                class_info = [cell.text.strip() for cell in cells]
-                classes.append(class_info)
+            # Print each row's cells for debugging
+            for i, cell in enumerate(cells):
+                print(f"Cell {i}: {cell.text.strip()}")  # Debugging line
+            # Check if the row contains data for BSCS 6 B in the class/section column
+            if len(cells) >= 4:
+                class_section = cells[3].text.strip()  # This is the 4th cell (index 3)
+
+
+                if "BS (CS) - 6 B" in class_section:
+                    # Extract class information
+                    class_info = [cell.text.strip() for cell in cells]
+                    classes.append(class_info)
 
         # If no classes are found, print a message
         if not classes:
@@ -51,10 +58,10 @@ def send_classes_to_endpoint(classes):
     try:
         formatted_classes = ""
         for idx, class_info in enumerate(classes, start=1):
-            course_name = class_info[3]
-            instructor = class_info[4]
-            room = class_info[5]
-            time_schedule = class_info[6]
+            course_name = class_info[4]
+            instructor = class_info[5]
+            room = class_info[6]
+            time_schedule = class_info[7]
 
             formatted_class = f"{idx}. Course: {course_name}\n" \
                               f"   Instructor: {instructor}\n" \
